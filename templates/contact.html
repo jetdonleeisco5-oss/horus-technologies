@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-24 bg-slate-950 text-white min-h-screen relative overflow-hidden">
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-amber-500/5 blur-[160px] rounded-full pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        <!-- Flash Messages / Success Toast Banner -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="mb-8 p-4 rounded-xl border {% if category == 'success' %}bg-emerald-500/10 border-emerald-500/30 text-emerald-400{% else %}bg-rose-500/10 border-rose-500/30 text-rose-400{% endif %} flex items-center space-x-3 shadow-lg">
+                    <span class="h-2.5 w-2.5 rounded-full {% if category == 'success' %}bg-emerald-400{% else %}bg-rose-400{% endif %} animate-ping"></span>
+                    <span class="text-sm font-medium">{{ message }}</span>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Page Header -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="inline-flex items-center space-x-2 bg-amber-500/10 border border-amber-500/20 px-4 py-1.5 rounded-full mb-4">
+                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-amber-500">Executive Engagement</span>
+            </div>
+            <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white">Contact Corporate</h1>
+            <p class="text-slate-400 mt-4 text-base sm:text-lg font-light leading-relaxed">
+                Connect directly with our executive engineering leadership or 24/7 Security Operations Center.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            
+            <!-- Left Column: Offices -->
+            <div class="lg:col-span-5 space-y-8">
+                <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl backdrop-blur-md">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
+                        <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">Enterprise SLA Response</h3>
+                    </div>
+                    <p class="text-slate-400 text-sm font-light leading-relaxed">
+                        Guaranteed evaluation response time within <strong class="text-amber-400">2 business hours</strong> for enterprise clients.
+                    </p>
+                </div>
+
+                {% for office in offices %}
+                <div class="bg-slate-900/60 border border-slate-800/80 p-6 sm:p-8 rounded-2xl backdrop-blur-md">
+                    <div class="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-500 mb-1">{{ office.region }}</div>
+                    <h3 class="text-xl font-bold text-white mb-4">{{ office.city }}</h3>
+                    <ul class="space-y-3 text-sm text-slate-300 font-light">
+                        <li><span class="text-slate-500 font-mono text-xs">ADDR:</span> {{ office.address }}</li>
+                        <li><span class="text-slate-500 font-mono text-xs">MAIL:</span> <a href="mailto:{{ office.email }}" class="text-amber-400 hover:underline font-mono text-xs">{{ office.email }}</a></li>
+                        <li><span class="text-slate-500 font-mono text-xs">TEL:</span> <span class="font-mono text-xs">{{ office.phone }}</span></li>
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Right Column: Interactive Form with Loading Spinner -->
+            <div class="lg:col-span-7 bg-slate-900/80 border border-slate-800 p-8 sm:p-10 rounded-2xl backdrop-blur-xl shadow-2xl">
+                <h2 class="text-2xl font-bold text-white mb-2">Corporate Request Portal</h2>
+                <p class="text-slate-400 text-sm font-light mb-8">Submit your project scope for direct routing to executive leadership.</p>
+
+                <form action="{{ url_for('contact') }}" method="POST" id="corporate-form" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">Full Name *</label>
+                            <input type="text" name="name" required placeholder="e.g. Sarah Jenkins"
+                                   class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 text-sm transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">Corporate Email *</label>
+                            <input type="email" name="email" required placeholder="name@company.com"
+                                   class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 text-sm transition">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">Company / Organization *</label>
+                            <input type="text" name="company" required placeholder="Organization Name"
+                                   class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 text-sm transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">Target Solution *</label>
+                            <select name="product" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 text-sm transition">
+                                <option value="" disabled selected>Select Solution...</option>
+                                <option value="Horus Core Architectures">Horus Core Architectures</option>
+                                <option value="Horus AI & Neural Labs">Horus AI & Neural Labs</option>
+                                <option value="Horus Cyber Defense Platform">Horus Cyber Defense Platform</option>
+                                <option value="Horus Cloud & Edge Matrix">Horus Cloud & Edge Matrix</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">Executive Summary / Scope Details *</label>
+                        <textarea name="summary" rows="5" required placeholder="Outline project objectives or security requirements..."
+                                  class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 text-sm transition resize-none"></textarea>
+                    </div>
+
+                    <div>
+                        <button type="submit" id="submit-btn"
+                                class="w-full py-4 bg-gradient-to-r from-amber-500 to-yellow-600 text-slate-950 font-extrabold rounded-xl shadow-lg hover:shadow-amber-500/20 hover:scale-[1.01] transition-all text-sm uppercase tracking-widest flex items-center justify-center space-x-2">
+                            <span id="btn-text">Transmit Corporate Brief &rarr;</span>
+                            <span id="spinner" class="hidden h-4 w-4 rounded-full border-2 border-slate-950 border-t-transparent animate-spin"></span>
+                        </button>
+                    </div>
+                </form>
+
+                <script>
+                    document.getElementById('corporate-form').addEventListener('submit', function() {
+                        const btn = document.getElementById('submit-btn');
+                        const text = document.getElementById('btn-text');
+                        const spinner = document.getElementById('spinner');
+                        
+                        btn.disabled = true;
+                        text.innerText = "Transmitting Securely...";
+                        spinner.classList.remove('hidden');
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

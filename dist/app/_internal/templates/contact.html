@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Contact - Horus Group{% endblock %}
+{% block content %}
+<section class="max-w-2xl mx-auto px-4 py-12">
+    <div class="bg-brand-cardBg border border-slate-800 p-8 rounded-xl">
+        <h2 class="text-3xl font-bold text-white mb-6">Corporate Contact</h2>
+        <form method="POST" class="space-y-4">
+            {{ form.hidden_tag() }}
+            <div>
+                <label class="block text-sm mb-1">{{ form.name.label }}</label>
+                {{ form.name(class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white") }}
+            </div>
+            <div>
+                <label class="block text-sm mb-1">{{ form.email.label }}</label>
+                {{ form.email(class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white") }}
+            </div>
+            <div>
+                <label class="block text-sm mb-1">{{ form.division.label }}</label>
+                {{ form.division(class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white") }}
+            </div>
+            <div>
+                <label class="block text-sm mb-1">{{ form.message.label }}</label>
+                {{ form.message(rows=4, class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white") }}
+            </div>
+            <div>
+                {{ form.submit(class="w-full bg-brand-gold hover:bg-yellow-500 text-slate-950 font-bold py-2 rounded cursor-pointer") }}
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

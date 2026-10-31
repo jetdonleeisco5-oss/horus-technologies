@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="py-20 text-center bg-gradient-to-b from-slate-900 to-brand-darkBg px-4">
+    <h1 class="text-5xl font-extrabold text-white">Visionary Engineering for <span class="text-brand-gold">Global Enterprises</span></h1>
+    <p class="text-xl text-slate-300 mt-4 max-w-2xl mx-auto">Horus Technologies Group drives enterprise software architecture, AI systems, and cybersecurity.</p>
+</section>
+<section class="max-w-7xl mx-auto px-4 py-12">
+    <h2 class="text-3xl font-bold mb-8 text-center">Our Group Divisions</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {% for div in divisions %}
+        <div class="bg-brand-cardBg border border-slate-800 p-6 rounded-xl">
+            <h3 class="text-2xl font-bold text-brand-gold mb-2">{{ div.title }}</h3>
+            <p class="text-slate-400 mb-4">{{ div.tagline }}</p>
+            <ul class="space-y-1">
+                {% for service in div.services %}
+                <li class="text-slate-300">✓ {{ service }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

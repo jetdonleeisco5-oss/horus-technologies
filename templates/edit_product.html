@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-20 bg-slate-950 text-white min-h-screen px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mx-auto bg-slate-900 border border-slate-800 p-8 rounded-2xl shadow-2xl">
+        
+        <div class="mb-6 border-b border-slate-800 pb-4">
+            <span class="text-xs font-mono uppercase text-amber-500 font-bold">Admin Control</span>
+            <h1 class="text-2xl font-black text-white mt-1">Edit Product Specifications</h1>
+            <p class="text-xs text-slate-400 font-light">Updating: <strong class="text-white">{{ product.title }}</strong></p>
+        </div>
+
+        <form action="{{ url_for('edit_product', id=product.id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+            <div>
+                <label class="block text-xs font-mono text-slate-400 mb-1">Product Title *</label>
+                <input type="text" name="title" value="{{ product.title }}" required
+                       class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white text-sm focus:border-amber-500 focus:outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-mono text-slate-400 mb-1">Tagline *</label>
+                <textarea name="tagline" required rows="2"
+                          class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white text-sm focus:border-amber-500 focus:outline-none resize-none">{{ product.tagline }}</textarea>
+            </div>
+            <div>
+                <label class="block text-xs font-mono text-slate-400 mb-1">Replace Banner Image (Optional)</label>
+                <input type="file" name="product_image" accept="image/*"
+                       class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-300 text-xs file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-400 cursor-pointer">
+            </div>
+            <div>
+                <label class="block text-xs font-mono text-slate-400 mb-1">Tech Stack (comma separated)</label>
+                <input type="text" name="tech_stack" value="{{ product.tech_stack }}" required
+                       class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white text-sm focus:border-amber-500 focus:outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-mono text-slate-400 mb-1">Features (comma separated)</label>
+                <input type="text" name="features" value="{{ product.features }}" required
+                       class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white text-sm focus:border-amber-500 focus:outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-mono text-slate-400 mb-1">SLA Standard</label>
+                <input type="text" name="sla" value="{{ product.sla }}" required
+                       class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white text-sm focus:border-amber-500 focus:outline-none">
+            </div>
+
+            <div class="flex items-center space-x-4 pt-4">
+                <a href="{{ url_for('admin_dashboard') }}" class="w-1/2 py-3 bg-slate-800 text-slate-300 text-center text-xs font-bold rounded-xl hover:bg-slate-700 transition">Cancel</a>
+                <button type="submit" class="w-1/2 py-3 bg-amber-500 text-slate-950 font-extrabold text-xs uppercase tracking-widest rounded-xl hover:bg-amber-400 transition">Save Changes</button>
+            </div>
+        </form>
+
+    </div>
+</section>
+{% endblock %}

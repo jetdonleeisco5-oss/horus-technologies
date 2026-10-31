@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-20 bg-slate-950 text-white min-h-screen px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="mb-6 p-4 rounded-xl border {% if category == 'success' %}bg-emerald-500/10 border-emerald-500/30 text-emerald-400{% else %}bg-rose-500/10 border-rose-500/30 text-rose-400{% endif %} flex items-center space-x-3 shadow-lg">
+                    <span class="text-sm font-medium">{{ message }}</span>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 border-b border-slate-800 pb-6">
+            <div>
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-amber-500 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">
+                    Restricted Admin Portal
+                </span>
+                <h1 class="text-3xl font-black text-white mt-2">Executive Operations Hub</h1>
+                <p class="text-slate-400 text-sm font-light mt-1">Manage infrastructure solutions, update catalog items, and view client inquiries.</p>
+            </div>
+            <div class="mt-4 md:mt-0">
+                <a href="{{ url_for('logout') }}" class="px-4 py-2 bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-bold rounded-xl hover:bg-rose-500 hover:text-white transition">Sign Out</a>
+            </div>
+        </div>
+
+        <!-- Section 1: Client Inquiries Inbox -->
+        <div class="mb-16 bg-slate-900 border border-slate-800 p-6 rounded-2xl">
+            <h2 class="text-xl font-bold text-white mb-4 flex items-center justify-between">
+                <span>📥 Client Inquiries Inbox</span>
+                <span class="text-xs font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full">{{ inquiries|length }} Received</span>
+            </h2>
+            
+            {% if inquiries %}
+            <div class="space-y-4">
+                {% for inq in inquiries %}
+                <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div class="space-y-1">
+                        <div class="flex items-center space-x-3">
+                            <span class="font-bold text-white text-base">{{ inq.name }}</span>
+                            <span class="text-xs font-mono text-amber-400 bg-slate-900 border border-slate-800 px-2 py-0.5 rounded">{{ inq.company }}</span>
+                            <span class="text-xs text-slate-500 font-mono">{{ inq.email }}</span>
+                        </div>
+                        <p class="text-xs font-mono text-slate-400">Target Solution: <span class="text-slate-200">{{ inq.product }}</span></p>
+                        <p class="text-sm text-slate-300 font-light bg-slate-900/60 p-3 rounded-lg border border-slate-800/80 mt-2">{{ inq.summary }}</p>
+                    </div>
+                    <div class="shrink-0">
+                        <a href="{{ url_for('delete_inquiry', id=inq.id) }}" onclick="return confirm('Archive this inquiry?')"
+                           class="px-3 py-2 bg-rose-500/10 text-rose-400 border border-rose-500/30 text-xs font-bold rounded-lg hover:bg-rose-500 hover:text-white transition">
+                            Archive Message
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-sm text-slate-500 font-light italic">No client inquiries received yet.</p>
+            {% endif %}
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            <!-- Left: Add New Product Form -->
+            <div class="lg:col-span-5 bg-slate-900 border border-slate-800 p-6 rounded-2xl h-fit">
+                <h2 class="text-xl font-bold text-white mb-4">Publish New Solution</h2>
+                <form action="{{ url_for('admin_dashboard') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Product Title *</label>
+                        <input type="text" name="title" required placeholder="e.g. Horus Quantum Vault"
+                               class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white text-sm focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Tagline *</label>
+                        <textarea name="tagline" required rows="2" placeholder="Brief description..."
+                                  class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white text-sm focus:border-amber-500 focus:outline-none resize-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Banner Image *</label>
+                        <input type="file" name="product_image" accept="image/*" required
+                               class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-300 text-xs file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-400 cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Tech Stack (comma separated)</label>
+                        <input type="text" name="tech_stack" required placeholder="Python, Docker, Redis"
+                               class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white text-sm focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Features (comma separated)</label>
+                        <input type="text" name="features" required placeholder="Zero-Day Shield,Automated Backup"
+                               class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white text-sm focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">SLA Standard</label>
+                        <input type="text" name="sla" value="99.99% Uptime"
+                               class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white text-sm focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-amber-500 text-slate-950 font-extrabold text-xs uppercase tracking-widest rounded-xl hover:bg-amber-400 transition">
+                        Publish Solution &rarr;
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right: Active Products Catalog with Edit & Delete -->
+            <div class="lg:col-span-7 space-y-4">
+                <h2 class="text-xl font-bold text-white mb-4">Active Database Catalog</h2>
+                {% for p in products %}
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <img src="{{ url_for('static', filename='js/images/' ~ p.image) }}" alt="" class="w-12 h-12 object-cover rounded-lg border border-slate-800">
+                        <div>
+                            <h3 class="text-base font-bold text-white">{{ p.title }}</h3>
+                            <p class="text-xs text-slate-400 font-light mt-0.5 line-clamp-1">{{ p.tagline }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <a href="{{ url_for('edit_product', id=p.id) }}" 
+                           class="px-3 py-1.5 bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs font-bold rounded-lg hover:bg-amber-500 hover:text-slate-950 transition">
+                            Edit
+                        </a>
+                        <a href="{{ url_for('delete_product', id=p.id) }}" onclick="return confirm('Decommission this product?')"
+                           class="px-3 py-1.5 bg-rose-500/10 text-rose-400 border border-rose-500/30 text-xs font-bold rounded-lg hover:bg-rose-500 hover:text-white transition">
+                            Delete
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

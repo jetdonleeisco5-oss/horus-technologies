@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-24 bg-slate-950 text-white min-h-[85vh] flex items-center justify-center relative overflow-hidden">
+    <!-- Ambient Glow -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-500/10 blur-[150px] rounded-full pointer-events-none"></div>
+
+    <div class="max-w-md w-full mx-auto px-4 relative z-10">
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="mb-6 p-4 rounded-xl border {% if category == 'success' %}bg-emerald-500/10 border-emerald-500/30 text-emerald-400{% else %}bg-rose-500/10 border-rose-500/30 text-rose-400{% endif %} flex items-center space-x-3 shadow-lg">
+                    <span class="text-sm font-medium">{{ message }}</span>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="bg-slate-900/90 border border-slate-800 p-8 sm:p-10 rounded-2xl backdrop-blur-xl shadow-2xl">
+            
+            <div class="text-center mb-8">
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-amber-500 bg-amber-500/10 border border-amber-500/20 px-3.5 py-1 rounded-full inline-block mb-3">
+                    Secure Client Portal
+                </span>
+                <h1 class="text-2xl sm:text-3xl font-black text-white">Sign In to Horus</h1>
+                <p class="text-slate-400 text-xs font-light mt-2">Enter your authorized enterprise credentials.</p>
+            </div>
+
+            <form action="{{ url_for('login') }}" method="POST" class="space-y-6">
+                <div>
+                    <label class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">Corporate Email</label>
+                    <input type="email" name="email" required placeholder="admin@horustech.com"
+                           class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 text-sm transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">Password</label>
+                    <input type="password" name="password" required placeholder="••••••••••••"
+                           class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 text-sm transition">
+                </div>
+
+                <div>
+                    <button type="submit" 
+                            class="w-full py-4 bg-gradient-to-r from-amber-500 to-yellow-600 text-slate-950 font-extrabold rounded-xl shadow-lg hover:shadow-amber-500/20 hover:scale-[1.01] transition-all text-sm uppercase tracking-widest">
+                        Authorize Session &rarr;
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-6 text-center border-t border-slate-800/80 pt-6">
+                <p class="text-xs text-slate-500">
+                    Need client portal access? <a href="{{ url_for('contact') }}" class="text-amber-400 hover:underline font-semibold">Contact Engineering</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}
